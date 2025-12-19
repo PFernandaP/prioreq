@@ -1,0 +1,163 @@
+[
+  {
+    "id": "P-001",
+    "name": "AI in Education",
+    "area": "Education",
+    "description": "Develop an AI system to support adaptive learning for students.",
+    "guidelines": [
+      "All content and interface must be in English.",
+      "Validate usability and accessibility of all modules.",
+      "Ensure data privacy and anonymization of student information.",
+      "Incorporate evaluation metrics for learning outcomes."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Collect data on student progress."},
+      {"id": "R2", "text": "Adapt content based on performance."},
+      {"id": "R3", "text": "Store results securely."},
+      {"id": "R4", "text": "Easy to navigate interface."},
+      {"id": "R5", "text": "Generate performance reports."},
+      {"id": "R6", "text": "Support multiple subjects."},
+      {"id": "R7", "text": "Include teacher dashboards."}
+    ]
+  },
+  {
+    "id": "P-002",
+    "name": "Smart Logistics",
+    "area": "Engineering",
+    "description": "Optimize supply chain and inventory using AI and IoT devices.",
+    "guidelines": [
+      "Ensure integration with existing ERP systems.",
+      "Prioritize real-time data collection.",
+      "Maintain high data security."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Track shipments in real-time."},
+      {"id": "R2", "text": "Predict stock shortages."},
+      {"id": "R3", "text": "Optimize delivery routes."},
+      {"id": "R4", "text": "Generate inventory alerts."},
+      {"id": "R5", "text": "Support multiple warehouses."},
+      {"id": "R6", "text": "Integrate IoT sensors."},
+      {"id": "R7", "text": "Provide analytics dashboard."}
+    ]
+  },
+  {
+    "id": "P-003",
+    "name": "Green Energy Monitor",
+    "area": "Sustainability",
+    "description": "Monitor and reduce carbon footprint in buildings.",
+    "guidelines": [
+      "Prioritize renewable energy data.",
+      "Enable real-time energy tracking.",
+      "Provide user-friendly dashboards."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Collect energy consumption data."},
+      {"id": "R2", "text": "Monitor carbon emissions."},
+      {"id": "R3", "text": "Generate energy efficiency reports."},
+      {"id": "R4", "text": "Send alerts for unusual consumption."},
+      {"id": "R5", "text": "Integrate with solar panel sensors."},
+      {"id": "R6", "text": "Display historical trends."},
+      {"id": "R7", "text": "Enable mobile access."}
+    ]
+  },
+  {
+    "id": "P-004",
+    "name": "Healthcare Assistant App",
+    "area": "Health Tech",
+    "description": "Assist patients in managing appointments, medications, and health records.",
+    "guidelines": [
+      "Follow HIPAA compliance standards.",
+      "Ensure secure patient data storage.",
+      "Provide alerts for medication schedules."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Track appointments."},
+      {"id": "R2", "text": "Remind medication times."},
+      {"id": "R3", "text": "Maintain electronic health records."},
+      {"id": "R4", "text": "Support telemedicine calls."},
+      {"id": "R5", "text": "Provide symptom tracker."},
+      {"id": "R6", "text": "Allow doctor notes entry."},
+      {"id": "R7", "text": "Generate monthly health summary."}
+    ]
+  },
+  {
+    "id": "P-005",
+    "name": "E-commerce Recommender",
+    "area": "Retail",
+    "description": "Personalized product recommendations using AI.",
+    "guidelines": [
+      "Respect user privacy and GDPR.",
+      "Recommendations must update in real-time.",
+      "UI must be responsive for all devices."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Analyze user purchase history."},
+      {"id": "R2", "text": "Suggest similar products."},
+      {"id": "R3", "text": "Provide seasonal recommendations."},
+      {"id": "R4", "text": "Include top trending items."},
+      {"id": "R5", "text": "Update recommendations daily."},
+      {"id": "R6", "text": "Support cross-selling."},
+      {"id": "R7", "text": "Provide analytics dashboard."}
+    ]
+  },
+  {
+    "id": "P-006",
+    "name": "Disaster Response Planner",
+    "area": "Public Safety",
+    "description": "Plan and coordinate resources for natural disasters.",
+    "guidelines": [
+      "Enable multi-agency coordination.",
+      "Support real-time updates.",
+      "Prioritize user safety notifications."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Track disaster-affected areas."},
+      {"id": "R2", "text": "Allocate emergency resources."},
+      {"id": "R3", "text": "Provide evacuation maps."},
+      {"id": "R4", "text": "Send alerts to citizens."},
+      {"id": "R5", "text": "Generate resource usage reports."},
+      {"id": "R6", "text": "Allow mobile coordination."},
+      {"id": "R7", "text": "Integrate with weather APIs."}
+    ]
+  },
+  {
+    "id": "P-007",
+    "name": "Smart Agriculture System",
+    "area": "Agriculture",
+    "description": "Optimize crop yield using IoT sensors and AI analytics.",
+    "guidelines": [
+      "Ensure sensor data reliability.",
+      "Provide actionable insights for farmers.",
+      "Dashboard should be easy to interpret."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Monitor soil moisture levels."},
+      {"id": "R2", "text": "Track temperature and humidity."},
+      {"id": "R3", "text": "Predict optimal irrigation schedule."},
+      {"id": "R4", "text": "Detect pest threats."},
+      {"id": "R5", "text": "Provide crop yield predictions."},
+      {"id": "R6", "text": "Integrate satellite imagery."},
+      {"id": "R7", "text": "Generate farmer reports."}
+    ]
+  },
+  {
+    "id": "P-008",
+    "name": "Smart City Traffic Monitor",
+    "area": "Urban Planning",
+    "description": "Monitor and optimize urban traffic flow using AI and sensors.",
+    "guidelines": [
+      "Ensure data privacy for citizens.",
+      "Provide predictive traffic analytics.",
+      "Integrate with city transportation systems."
+    ],
+    "requirements": [
+      {"id": "R1", "text": "Monitor traffic in real-time."},
+      {"id": "R2", "text": "Predict traffic congestion."},
+      {"id": "R3", "text": "Control traffic lights dynamically."},
+      {"id": "R4", "text": "Provide city traffic reports."},
+      {"id": "R5", "text": "Integrate with public transport schedules."},
+      {"id": "R6", "text": "Send alerts to drivers."},
+      {"id": "R7", "text": "Support mobile app monitoring."}
+    ]
+  }
+]

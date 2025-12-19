@@ -1,0 +1,20 @@
+# Ignorar entorno virtual de Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Ignorar carpeta del frontend de desarrollo (si la tienes copiada)
+frontend/
+node_modules/
+
+# Ignorar logs y archivos temporales
+*.log
+*.tmp
+
+# Ignorar carpeta de compilaciones de Angular (si no es la que sirves)
+dist/
+!static/  # <-- La excepción IMPORTANTE: NO ignores la carpeta "static" que sí necesitas
+
+# Base de datos local de desarrollo (si la usas)
+test.db
