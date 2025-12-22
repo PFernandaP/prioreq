@@ -8,13 +8,15 @@ from sqlalchemy.orm import Session
 from database import get_db
 from model.models import User
 
-SECRET_KEY = "TU_CLAVE_SECRETA_LARGA_Y_SEGURA"
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY not configured")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # -------------------------
 # PASSWORD HASHING
