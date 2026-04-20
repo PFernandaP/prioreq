@@ -8,7 +8,16 @@ from typing import Optional
 from auth_dependencies import admin_required        # ⬅ IMPORTANTE
 from auth import get_current_user                  # puedes usarlo si lo necesitas
 from schemas import ProjectCreate,UserCreate,UserOut
-
+from schemas import ExperimentResultCreate
+from model.models import (
+    ExperimentResult,
+    ExperimentDimensionPriority,
+    ExperimentSubdimensionPriority,
+    ExperimentMatrixRelation,
+    ExperimentRequirementScore
+)
+from auth import get_current_user
+from model.models import User
 
 router = APIRouter(
     prefix="/projects",
@@ -190,11 +199,11 @@ def get_my_projects(
         {
             "id": p.id,
             "name": p.name,
-            #"area": p.area,
             "description": p.description,
             "guidelines": p.guidelines.split(";") if p.guidelines else [],
             "requirements": [
                 {
+                    "id": r.id,
                     "displayId": r.displayId,
                     "description": r.description
                 }
@@ -257,4 +266,160 @@ def get_project_by_id(project_id: int, db: Session = Depends(get_db)):
         "description": project.description,
         "guidelines": project.guidelines.split(";") if project.guidelines else [],
         "requirements": reqs
+    }
+
+
+@router.post("/experiment/save")
+def save_experiment_result(
+    data: ExperimentResultCreate,
+    db: Session = Depends(get_db)
+):
+    try:
+        # 1. Buscar si ya existe resultado para este usuario y proyecto
+        result = db.query(ExperimentResult).filter(
+            ExperimentResult.user_id == data.user_id,
+            ExperimentResult.project_id == data.project_id
+        ).first()
+
+        # 2. Si no existe, crearlo
+        if not result:
+            result = ExperimentResult(
+                user_id=data.user_id,
+                project_id=data.project_id
+            )
+            db.add(result)
+            db.commit()
+            db.refresh(result)
+        else:
+            # 3. Si existe, borrar detalles antiguos para reemplazarlos
+            db.query(ExperimentDimensionPriority).filter(
+                ExperimentDimensionPriority.result_id == result.id
+            ).delete()
+
+            db.query(ExperimentSubdimensionPriority).filter(
+                ExperimentSubdimensionPriority.result_id == result.id
+            ).delete()
+
+            db.query(ExperimentMatrixRelation).filter(
+                ExperimentMatrixRelation.result_id == result.id
+            ).delete()
+
+            db.query(ExperimentRequirementScore).filter(
+                ExperimentRequirementScore.result_id == result.id
+            ).delete()
+
+            db.commit()
+
+        # 4. Guardar prioridades de dimensiones
+        for dim in data.dimension_priorities:
+            db.add(ExperimentDimensionPriority(
+                result_id=result.id,
+                dimension_id=dim.dimension_id,
+                priority_order=dim.priority_order,
+                weight=dim.weight
+            ))
+
+        # 5. Guardar prioridades de subdimensiones
+        for sub in data.subdimension_priorities:
+            db.add(ExperimentSubdimensionPriority(
+                result_id=result.id,
+                subdimension_id=sub.subdimension_id,
+                priority_label=sub.priority_label,
+                priority_value=sub.priority_value
+            ))
+
+        # 6. Guardar matriz
+        for relation in data.matrix_relations:
+            db.add(ExperimentMatrixRelation(
+                result_id=result.id,
+                requirement_id=relation.requirement_id,
+                subdimension_id=relation.subdimension_id,
+                is_related=relation.is_related
+            ))
+
+        # 7. Guardar ranking
+        for score in data.requirement_scores:
+            db.add(ExperimentRequirementScore(
+                result_id=result.id,
+                requirement_id=score.requirement_id,
+                ranking_position=score.ranking_position,
+                score=score.score
+            ))
+
+        db.commit()
+
+        return {
+            "message": "Experiment saved successfully",
+            "result_id": result.id
+        }
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/experiment/load/{project_id}")
+def load_experiment_result(
+    project_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    result = db.query(ExperimentResult).filter(
+        ExperimentResult.user_id == current_user.id,
+        ExperimentResult.project_id == project_id
+    ).first()
+
+    if not result:
+        return {"exists": False}
+
+    dimension_priorities = db.query(ExperimentDimensionPriority).filter(
+        ExperimentDimensionPriority.result_id == result.id
+    ).all()
+
+    subdimension_priorities = db.query(ExperimentSubdimensionPriority).filter(
+        ExperimentSubdimensionPriority.result_id == result.id
+    ).all()
+
+    matrix_relations = db.query(ExperimentMatrixRelation).filter(
+        ExperimentMatrixRelation.result_id == result.id
+    ).all()
+
+    requirement_scores = db.query(ExperimentRequirementScore).filter(
+        ExperimentRequirementScore.result_id == result.id
+    ).all()
+
+    return {
+        "exists": True,
+        "result_id": result.id,
+        "dimension_priorities": [
+            {
+                "dimension_id": d.dimension_id,
+                "priority_order": d.priority_order,
+                "weight": d.weight
+            }
+            for d in dimension_priorities
+        ],
+        "subdimension_priorities": [
+            {
+                "subdimension_id": s.subdimension_id,
+                "priority_label": s.priority_label,
+                "priority_value": s.priority_value
+            }
+            for s in subdimension_priorities
+        ],
+        "matrix_relations": [
+            {
+                "requirement_id": m.requirement_id,
+                "subdimension_id": m.subdimension_id,
+                "is_related": m.is_related
+            }
+            for m in matrix_relations
+        ],
+        "requirement_scores": [
+            {
+                "requirement_id": r.requirement_id,
+                "ranking_position": r.ranking_position,
+                "score": r.score
+            }
+            for r in requirement_scores
+        ]
     }
