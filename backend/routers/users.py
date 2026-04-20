@@ -123,6 +123,21 @@ def get_all_users(db: Session = Depends(get_db), current_user=Depends(get_curren
     admin_required(current_user)
     return db.query(User).all()
 
+
+# =========================
+# DEBUG: ver usuarios en producción
+# =========================
+@router.get("/debug/users")
+def debug_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return [
+        {
+            "id": u.id,
+            "email": u.email,
+            "role": u.role
+        }
+        for u in users
+    ]
 # =========================
 # Asignar proyectos específicos a un usuario (manual)
 # =========================
