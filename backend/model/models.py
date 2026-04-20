@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from database import Base
+from sqlalchemy import UniqueConstraint
 
 # -------------------------
 # PROJECT
@@ -85,3 +86,71 @@ class UserProject(Base):
     # Relaciones correctas
     user = relationship("User", back_populates="assigned_projects")
     project = relationship("Project")
+
+class ExperimentResult(Base):
+    __tablename__ = "experiment_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "project_id", name="uq_experiment_user_project"),
+    )
+
+
+class ExperimentDimensionPriority(Base):
+    __tablename__ = "experiment_dimension_priorities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    result_id = Column(Integer, ForeignKey("experiment_results.id"), nullable=False)
+    dimension_id = Column(Integer, nullable=False)
+    priority_order = Column(Integer, nullable=False)
+    weight = Column(Integer, nullable=False)
+
+
+class ExperimentSubdimensionPriority(Base):
+    __tablename__ = "experiment_subdimension_priorities"
+
+    id = Column(Integer, primary_key=True, index=True)
+    result_id = Column(Integer, ForeignKey("experiment_results.id"), nullable=False)
+    subdimension_id = Column(Integer, nullable=False)
+    priority_label = Column(String, nullable=False)
+    priority_value = Column(Integer, nullable=False)
+
+
+class ExperimentMatrixRelation(Base):
+    __tablename__ = "experiment_matrix_relations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    result_id = Column(Integer, ForeignKey("experiment_results.id"), nullable=False)
+    requirement_id = Column(Integer, ForeignKey("requirements.id"), nullable=False)
+    subdimension_id = Column(Integer, nullable=False)
+    is_related = Column(Integer, nullable=False, default=1)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "result_id",
+            "requirement_id",
+            "subdimension_id",
+            name="uq_result_requirement_subdimension"
+        ),
+    )
+
+
+class ExperimentRequirementScore(Base):
+    __tablename__ = "experiment_requirement_scores"
+
+    id = Column(Integer, primary_key=True, index=True)
+    result_id = Column(Integer, ForeignKey("experiment_results.id"), nullable=False)
+    requirement_id = Column(Integer, ForeignKey("requirements.id"), nullable=False)
+    ranking_position = Column(Integer, nullable=False)
+    score = Column(Float, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "result_id",
+            "requirement_id",
+            name="uq_result_requirement_score"
+        ),
+    )
