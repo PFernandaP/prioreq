@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from model.models import User
-from schemas import UserCreate, UserOut, UserLogin
-from validate_email_address import validate_email
+from schemas import UserCreate, UserLogin
 
 from auth import (
     hash_password,
@@ -48,3 +47,37 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     token = create_access_token(db_user)
 
     return {"access_token": token, "token_type": "bearer"}
+
+
+# =========================
+# DEBUG: ver usuarios reales en Railway
+# =========================
+@router.get("/debug/users")
+def debug_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return [
+        {
+            "id": u.id,
+            "email": u.email,
+            "role": u.role
+        }
+        for u in users
+    ]
+
+
+# =========================
+# DEBUG: revisar un usuario específico
+# =========================
+@router.get("/debug/user/{email}")
+def debug_user(email: str, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == email).first()
+
+    if not db_user:
+        return {"exists": False}
+
+    return {
+        "exists": True,
+        "id": db_user.id,
+        "email": db_user.email,
+        "role": db_user.role
+    }
